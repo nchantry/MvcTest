@@ -1,0 +1,69 @@
+﻿@model JO20417123_ASPNETCore_L3.Models.Product
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Category Name</label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Sub Category Name</label>
+                <select asp-for="SubCategoryId" class="form-control" asp-items="ViewBag.SubCategoryId"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Product Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            getSubCategoryByCategoryID();
+        })
+        $("#CategoryId").change(function () {
+            getSubCategoryByCategoryID();
+        });
+        var getSubCategoryByCategoryID = function () {
+            $.ajax({
+                url: '@Url.Action("GetSubCategoriesByCategoryId", "Home")',
+                type: 'GET',
+                data: {
+                    categoryId: $('#CategoryId').val(),
+                },
+                success: function (data) {
+                    $('#SubCategoryId').find('option').remove()
+                    $(data).each(
+                        function (index, item) {
+                            $('#SubCategoryId').append('<option value="' + item.id + '">' + item.name + '</option')
+                        }
+                    );
+                }
+            })
+        }
+
+    </script>
+
+}

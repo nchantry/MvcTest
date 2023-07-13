@@ -1,0 +1,30 @@
+﻿@model JO20417123_ASPNETCore_L3.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Category Name</dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SubCategory.Category.Name)
+        </dd>
+        <dt class="col-sm-2">Sub Category Name</dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SubCategory.Name)
+        </dd>
+        <dt class="col-sm-2">Product Name</dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

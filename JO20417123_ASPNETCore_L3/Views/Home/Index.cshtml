@@ -1,0 +1,96 @@
+﻿@model Product
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <div class="text-center">
+        <h2>Cascading DropDownList Demo</h2>
+        <br /><br />
+
+        <div class="row">
+            <div class="col-md-4" style="text-align: left">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label class="control-label">Category Name</label>
+                        <select asp-for="CategoryId" class="form-select" id="categoryId" asp-items="@ViewBag.Categories">
+                            <option disabled selected>--Select Category--</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Sub Category Name</label>
+                        <select asp-for="SubCategoryId" class="form-select" id="subCategoryId" asp-items="@ViewBag.SubCategories">
+                            <option disabled selected>--Select Sub-Category--</option>
+                        </select>
+                        <span asp-validation-for="SubCategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Product Name</label>
+                        <select asp-for="Id" class="form-select" id="productId"></select>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" disabled value="Submit" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            getSubCategoryByCategoryID();
+            getProductByCategoryIdAndSubCategoryID();
+        })
+        $("#categoryId").change(function () {
+            getSubCategoryByCategoryID();
+            getProductByCategoryIdAndSubCategoryID();
+        });
+        $("#subCategoryId").change(function () {
+            getProductByCategoryIdAndSubCategoryID();
+        });
+        var getSubCategoryByCategoryID = function () {
+            $.ajax({
+                url: '@Url.Action("GetSubCategoriesByCategoryId", "Home")',
+                type:'GET',
+                data:{
+                    categoryId: $('#categoryId').val(),
+                },
+                success: function(data){
+                    $('#subCategoryId').find('option').remove()
+                    $('#subCategoryId').append('<option value="0">--Select Sub-Category--</option')
+                    $(data).each(
+                        function(index,item){
+                            $('#subCategoryId').append('<option value="'+item.id+'">' + item.name+ '</option')
+                        }
+                    );
+                }
+            })
+        }
+        var getProductByCategoryIdAndSubCategoryID = function () {
+            $.ajax({
+                url: '@Url.Action("GetProductByCategoryAndSubCategoryId", "Home")',
+                type: 'GET',
+                data: {
+                    categoryId: $('#categoryId').val(),
+                    subCategoryId: $('#subCategoryId').val(),
+                },
+                success: function (data) {
+                    $('#productId').find('option').remove()
+                    $(data).each(
+                        function (index, item) {
+                            $('#productId').append('<option value="' + item.id + '">' + item.name + '</option')
+                        }
+                    );
+                }
+            })
+        }
+
+    </script>
+}
